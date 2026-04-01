@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ADC Pizza — Galeria & Atmosfera</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,400;0,500;0,600;1,400;1,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --red: #E8311A; --red-d: #B8240F; --yellow: #F5C518;
+      --black: #0D0D0D; --dark: #141414; --dark2: #1C1C1C; --dark3: #242424;
+      --white: #F7F4EF; --gray: #888; --lgray: #2A2A2A;
+      --display: 'Bebas Neue', sans-serif; --body: 'Barlow', sans-serif; --t: 0.3s ease;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--white); font-family: var(--body); overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; width: 100%; object-fit: cover; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 3rem; height: 64px; background: var(--black); border-bottom: 2px solid var(--red); }
+    .nav-logo { font-family: var(--display); font-size: 1.6rem; letter-spacing: 0.04em; color: var(--white); }
+    .nav-logo span { color: var(--red); }
+    .nav-links { display: flex; list-style: none; gap: 0; }
+    .nav-links a { display: block; padding: 0 1.1rem; height: 64px; line-height: 64px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); transition: color var(--t), background var(--t); }
+    .nav-links a:hover, .nav-links a.active { color: var(--white); background: var(--red); }
+    .nav-order { background: var(--red); color: var(--white); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.55rem 1.4rem; border: 2px solid var(--red); transition: all var(--t); }
+    .nav-order:hover { background: transparent; color: var(--red); }
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .nav-hamburger span { display: block; width: 24px; height: 2px; background: var(--white); }
+    .mobile-menu { display: none; position: fixed; inset: 0; background: var(--black); z-index: 999; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; border-top: 4px solid var(--red); }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { font-family: var(--display); font-size: 2.8rem; letter-spacing: 0.05em; color: var(--white); }
+    .mobile-menu a:hover { color: var(--red); }
+    .mobile-close { position: absolute; top: 1.2rem; right: 1.5rem; background: none; border: none; color: var(--red); font-size: 2rem; cursor: pointer; }
+
+    /* PAGE HERO */
+    .page-hero { padding: 8rem 4rem 4rem; background: var(--dark); border-bottom: 2px solid var(--lgray); position: relative; overflow: hidden; }
+    .page-hero::before { content: 'GALLERY'; position: absolute; right: -3rem; bottom: -1rem; font-family: var(--display); font-size: 18vw; color: rgba(232,49,26,0.04); pointer-events: none; white-space: nowrap; }
+    .sec-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--red); margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.6rem; }
+    .sec-label::before { content: ''; display: block; width: 24px; height: 2px; background: var(--red); }
+    .page-title { font-family: var(--display); font-size: clamp(3.5rem, 8vw, 7rem); letter-spacing: 0.02em; line-height: 0.9; color: var(--white); }
+    .page-title .ac { color: var(--red); }
+    .page-title .yl { color: var(--yellow); }
+    .page-sub { font-size: 1rem; color: var(--gray); max-width: 500px; margin-top: 1.2rem; line-height: 1.7; }
+
+    /* FILTER */
+    .gal-filter { background: var(--dark); border-bottom: 2px solid var(--lgray); padding: 0 4rem; display: flex; gap: 0; overflow-x: auto; }
+    .gf-btn { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); padding: 1.1rem 1.3rem; background: none; border: none; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; transition: all var(--t); }
+    .gf-btn:hover { color: var(--white); }
+    .gf-btn.active { color: var(--red); border-bottom-color: var(--red); }
+
+    /* MASONRY-STYLE GALLERY */
+    .gal-section { padding: 0; background: var(--black); }
+
+    /* AMBIENT */
+    .gal-block { padding: 4rem; border-bottom: 2px solid var(--lgray); }
+    .gal-block-header { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--lgray); }
+    .gal-block-title { font-family: var(--display); font-size: 2rem; letter-spacing: 0.03em; color: var(--white); }
+    .gal-block-count { font-size: 0.7rem; font-weight: 600; color: var(--red); letter-spacing: 0.1em; text-transform: uppercase; }
+
+    .grid-a { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3px; background: var(--lgray); }
+    .grid-a img { height: 280px; filter: brightness(0.8); transition: filter 0.4s, transform 0.5s; }
+    .grid-a img:hover { filter: brightness(1); transform: scale(1.03); }
+    .grid-a .gi-tall { grid-row: span 2; }
+    .grid-a .gi-tall img { height: 563px; }
+
+    .grid-b { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; background: var(--lgray); }
+    .grid-b img { height: 220px; filter: brightness(0.8); transition: filter 0.4s, transform 0.5s; }
+    .grid-b img:hover { filter: brightness(1); transform: scale(1.03); }
+    .grid-b .wide { grid-column: span 2; }
+    .grid-b .wide img { height: 220px; }
+
+    .grid-c { display: grid; grid-template-columns: 1fr 2fr; gap: 3px; background: var(--lgray); }
+    .grid-c img { height: 300px; filter: brightness(0.8); transition: filter 0.4s, transform 0.5s; }
+    .grid-c img:hover { filter: brightness(1); transform: scale(1.03); }
+
+    /* BEHIND THE SCENES */
+    .bts-section { padding: 5rem 4rem; background: var(--dark2); border-bottom: 2px solid var(--lgray); }
+    .bts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .bts-text h2 { font-family: var(--display); font-size: clamp(2.5rem, 5vw, 4rem); letter-spacing: 0.02em; color: var(--white); line-height: 0.95; margin-bottom: 1.2rem; }
+    .bts-text h2 .ac { color: var(--red); }
+    .bts-text p { font-size: 0.88rem; color: var(--gray); line-height: 1.8; margin-bottom: 1rem; }
+    .bts-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+    .bts-fact { padding: 1.2rem; border-left: 3px solid var(--red); background: var(--lgray); }
+    .bts-fact-num { font-family: var(--display); font-size: 1.8rem; color: var(--yellow); line-height: 1; }
+    .bts-fact-label { font-size: 0.72rem; color: var(--gray); margin-top: 0.2rem; }
+    .bts-img-stack { position: relative; }
+    .bts-img-main { border: 2px solid var(--lgray); }
+    .bts-img-main img { height: 420px; filter: brightness(0.85); }
+    .bts-img-over { position: absolute; bottom: -1.5rem; right: -1.5rem; width: 200px; border: 3px solid var(--red); background: var(--black); }
+    .bts-img-over img { height: 140px; }
+
+    /* INSTAGRAM STRIP */
+    .insta-strip { padding: 4rem; background: var(--black); border-top: 2px solid var(--lgray); }
+    .insta-strip h3 { font-family: var(--display); font-size: 2rem; letter-spacing: 0.03em; color: var(--white); margin-bottom: 0.4rem; }
+    .insta-strip p { font-size: 0.82rem; color: var(--gray); margin-bottom: 2rem; }
+    .insta-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 3px; background: var(--lgray); }
+    .insta-item { overflow: hidden; position: relative; }
+    .insta-item img { height: 150px; filter: brightness(0.7) saturate(0.8); transition: filter 0.4s, transform 0.5s; }
+    .insta-item:hover img { filter: brightness(1) saturate(1.1); transform: scale(1.08); }
+    .insta-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(232,49,26,0); transition: background var(--t); }
+    .insta-item:hover .insta-overlay { background: rgba(232,49,26,0.35); }
+    .insta-icon { color: var(--white); font-size: 1.5rem; opacity: 0; transition: opacity var(--t); }
+    .insta-item:hover .insta-icon { opacity: 1; }
+
+    /* CTA */
+    .cta-strip { background: var(--red); padding: 3rem 4rem; border-top: 3px solid var(--red-d); display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+    .cta-strip h3 { font-family: var(--display); font-size: 2rem; color: var(--white); }
+    .cta-strip p { font-size: 0.82rem; color: rgba(255,255,255,0.7); margin-top: 0.2rem; }
+    .btn-white { display: inline-block; background: var(--white); color: var(--black); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 1rem 2rem; border: 2px solid var(--white); transition: all var(--t); }
+    .btn-white:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+
+    footer { background: var(--black); border-top: 2px solid var(--red); padding: 2.5rem 4rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+    .footer-logo { font-family: var(--display); font-size: 1.4rem; letter-spacing: 0.04em; color: var(--white); }
+    .footer-logo span { color: var(--red); }
+    .footer-links { display: flex; gap: 2rem; list-style: none; flex-wrap: wrap; }
+    .footer-links a { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray); transition: color var(--t); }
+    .footer-links a:hover { color: var(--red); }
+    .footer-copy { font-size: 0.65rem; color: rgba(136,136,136,0.4); }
+
+    @media (max-width: 1024px) {
+      nav, .bts-section, .insta-strip, .cta-strip { padding-left: 2rem; padding-right: 2rem; }
+      .page-hero { padding: 7rem 2rem 3rem; }
+      .gal-filter, .gal-block { padding-left: 2rem; padding-right: 2rem; }
+      .grid-a { grid-template-columns: 1fr 1fr; }
+      .grid-a .gi-tall { grid-row: span 1; }
+      .grid-a .gi-tall img { height: 280px; }
+      .grid-b { grid-template-columns: 1fr 1fr; }
+      .bts-grid { grid-template-columns: 1fr; }
+      .bts-img-over { right: 0; }
+      .insta-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .nav-links, .nav-order { display: none; }
+      .nav-hamburger { display: flex; }
+      nav { padding: 0 1.5rem; }
+      .page-hero { padding: 7rem 1.5rem 3rem; }
+      .gal-filter, .gal-block { padding: 0 1.5rem; }
+      .gal-block { padding-top: 3rem; padding-bottom: 3rem; }
+      .grid-a { grid-template-columns: 1fr; }
+      .grid-a img { height: 220px; }
+      .grid-b { grid-template-columns: 1fr 1fr; }
+      .grid-b .wide { grid-column: span 2; }
+      .grid-c { grid-template-columns: 1fr; }
+      .bts-section, .insta-strip, .cta-strip { padding: 3rem 1.5rem; }
+      .insta-grid { grid-template-columns: repeat(3, 1fr); }
+      .insta-item img { height: 110px; }
+      .bts-facts { grid-template-columns: 1fr 1fr; }
+      .cta-strip { flex-direction: column; align-items: flex-start; }
+      footer { padding: 2rem 1.5rem; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">ADC <span>PIZZA</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="menu.html">Menu</a></li>
+    <li><a href="katering.html">Katering</a></li>
+    <li><a href="galeria.html" class="active">Galeria</a></li>
+  </ul>
+  <a href="kontakt.html" class="nav-order">Porosit Tani</a>
+  <button class="nav-hamburger" onclick="document.getElementById('mob').classList.add('open')"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mob">
+  <button class="mobile-close" onclick="document.getElementById('mob').classList.remove('open')">✕</button>
+  <a href="index.html" onclick="document.getElementById('mob').classList.remove('open')">Home</a>
+  <a href="menu.html" onclick="document.getElementById('mob').classList.remove('open')">Menu</a>
+  <a href="katering.html" onclick="document.getElementById('mob').classList.remove('open')">Katering</a>
+  <a href="galeria.html" onclick="document.getElementById('mob').classList.remove('open')">Galeria</a>
+  <a href="kontakt.html" onclick="document.getElementById('mob').classList.remove('open')">Kontakt</a>
+</div>
+
+<section class="page-hero">
+  <div class="sec-label">● Galeria</div>
+  <h1 class="page-title">SHIJA QE<br><span class="ac">SHIHET.</span></h1>
+  <p class="page-sub">Pamje nga kuzhinë jonë, ambienti i restorantit, evente katering dhe çaste të paharruara — gjithçka ADC Pizza.</p>
+</section>
+
+<div class="gal-filter">
+  <button class="gf-btn active">Të Gjitha</button>
+  <button class="gf-btn">Ushqimi</button>
+  <button class="gf-btn">Ambienti</button>
+  <button class="gf-btn">Katering</button>
+  <button class="gf-btn">Pas Skenave</button>
+</div>
+
+<!-- FOOD GALLERY -->
+<div class="gal-section">
+  <div class="gal-block">
+    <div class="gal-block-header">
+      <div class="gal-block-title">USHQIMI</div>
+      <div class="gal-block-count">● Pica, Pasta & Dessert</div>
+    </div>
+    <div class="grid-a">
+      <div class="gi-tall"><img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&q=85" alt="Pizza Margherita"></div>
+      <div><img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500&q=85" alt="Diavola"></div>
+      <div><img src="https://images.unsplash.com/photo-1608756687911-aa1599ab3bd9?w=500&q=85" alt="Carbonara"></div>
+      <div><img src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=500&q=85" alt="Tiramisu"></div>
+      <div><img src="https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=500&q=85" alt="Bruschetta"></div>
+    </div>
+  </div>
+
+  <!-- MORE FOOD -->
+  <div class="gal-block">
+    <div class="gal-block-header">
+      <div class="gal-block-title">SPECIALITETET</div>
+      <div class="gal-block-count">● Pikantë, Clasike & Premium</div>
+    </div>
+    <div class="grid-b">
+      <div class="wide"><img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=900&q=85" alt="Quattro Stagioni"></div>
+      <div><img src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=500&q=85" alt="Bolognese"></div>
+      <div><img src="https://images.unsplash.com/photo-1555072956-7758afb20e8f?w=500&q=85" alt="Trufa"></div>
+      <div><img src="https://images.unsplash.com/photo-1471943311424-646960669fbc?w=500&q=85" alt="Pizza"></div>
+      <div><img src="https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?w=500&q=85" alt="Pasta"></div>
+      <div><img src="https://images.unsplash.com/photo-1559847844-5315695dadae?w=500&q=85" alt="Taglieri"></div>
+    </div>
+  </div>
+
+  <!-- AMBIENT -->
+  <div class="gal-block">
+    <div class="gal-block-header">
+      <div class="gal-block-title">AMBIENTI</div>
+      <div class="gal-block-count">● Restoranti & Atmosfera</div>
+    </div>
+    <div class="grid-c">
+      <div><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&q=85" alt="Interior"></div>
+      <div><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=900&q=85" alt="Restoranti"></div>
+    </div>
+    <div class="grid-b" style="margin-top:3px;">
+      <div><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&q=85" alt="Tavolina"></div>
+      <div><img src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=500&q=85" alt="Bar"></div>
+      <div class="wide"><img src="https://images.unsplash.com/photo-1544148103-0773bf10d330?w=900&q=85" alt="Salla"></div>
+    </div>
+  </div>
+
+  <!-- CATERING -->
+  <div class="gal-block">
+    <div class="gal-block-header">
+      <div class="gal-block-title">KATERING</div>
+      <div class="gal-block-count">● Evente & Dasma</div>
+    </div>
+    <div class="grid-b">
+      <div class="wide"><img src="https://images.unsplash.com/photo-1555244162-803834f70033?w=900&q=85" alt="Katering Event"></div>
+      <div><img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=500&q=85" alt="Dasmë"></div>
+      <div><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500&q=85" alt="Buffet"></div>
+      <div><img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=500&q=85" alt="Evente"></div>
+      <div><img src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=500&q=85" alt="Ushqim Katering"></div>
+      <div><img src="https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?w=500&q=85" alt="Setup"></div>
+    </div>
+  </div>
+</div>
+
+<!-- BEHIND THE SCENES -->
+<section class="bts-section">
+  <div class="bts-grid">
+    <div class="bts-text">
+      <div class="sec-label">● Pas Skenave</div>
+      <h2>KUZHINË ME<br><span class="ac">PASION.</span></h2>
+      <p>Çdo ditë fillojmë herët — brumi fillon të fermentohet nga nata, salcat gatuhen ngadalë dhe çdo përbërës kontrollohet me kujdes. Nuk ka sekrete — vetëm punë e palodhur dhe dashuri për ushqimin e vërtetë.</p>
+      <p>Shefit ynë Luigi Messina ka 20 vite eksperiencë në Napoli dhe Milano para se të vinte të sjellë autenticitetin italian në Tiranë.</p>
+      <div class="bts-facts">
+        <div class="bts-fact"><div class="bts-fact-num">48h</div><div class="bts-fact-label">Fermentim brumi</div></div>
+        <div class="bts-fact"><div class="bts-fact-num">450°</div><div class="bts-fact-label">Temperatura furrës</div></div>
+        <div class="bts-fact"><div class="bts-fact-num">90"</div><div class="bts-fact-label">Koha e pjekjes</div></div>
+        <div class="bts-fact"><div class="bts-fact-num">100%</div><div class="bts-fact-label">Italisht origjinal</div></div>
+      </div>
+    </div>
+    <div class="bts-img-stack">
+      <div class="bts-img-main">
+        <img src="https://images.unsplash.com/photo-1600628421060-f8e04cd01014?w=700&q=85" alt="Kuzhinë">
+      </div>
+      <div class="bts-img-over">
+        <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400&q=85" alt="Chef">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTAGRAM -->
+<section class="insta-strip">
+  <h3>NA NDIQ NË INSTAGRAM</h3>
+  <p>@adcpizza.al — postime çdo ditë nga kuzhinë jonë</p>
+  <div class="insta-grid">
+    <div class="insta-item"><img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=300&q=80" alt=""><div class="insta-overlay"><span class="insta-icon">♥</span></div></div>
+    <div class="insta-item"><img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300&q=80" alt=""><div class="insta-overlay"><span class="insta-icon">♥</span></div></div>
+    <div class="insta-item"><img src="https://images.unsplash.com/photo-1608756687911-aa1599ab3bd9?w=300&q=80" alt=""><div class="insta-overlay"><span class="insta-icon">♥</span></div></div>
+    <div class="insta-item"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=300&q=80" alt=""><div class="insta-overlay"><span class="insta-icon">♥</span></div></div>
+    <div class="insta-item"><img src="https://images.unsplash.com/photo-1555244162-803834f70033?w=300&q=80" alt=""><div class="insta-overlay"><span class="insta-icon">♥</span></div></div>
+    <div class="insta-item"><img src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=300&q=80" alt=""><div class="insta-overlay"><span class="insta-icon">♥</span></div></div>
+  </div>
+</section>
+
+<div class="cta-strip">
+  <div><h3>POROSIT TANI — DELIVERY 30 MIN</h3><p>Ose rezervo katering për eventin tënd të radhës.</p></div>
+  <a href="kontakt.html" class="btn-white">Porosit / Rezervo →</a>
+</div>
+
+<footer>
+  <div class="footer-logo">ADC <span>PIZZA</span></div>
+  <ul class="footer-links">
+    <li><a href="menu.html">Menu</a></li>
+    <li><a href="katering.html">Katering</a></li>
+    <li><a href="galeria.html">Galeria</a></li>
+    <li><a href="kontakt.html">Kontakt</a></li>
+  </ul>
+  <div class="footer-copy">© 2024 ADC Pizza & Catering.</div>
+</footer>
+</body>
+</html>
